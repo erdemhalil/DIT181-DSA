@@ -1,0 +1,103 @@
+
+/******************************************************************************
+** DIT181  Datastrukturer och algoritmer, LP3 2021
+** Lab 2: Autocomplete
+*******************************************************************************/
+
+Group members:
+- Aditya Nair
+- Erdem Halil
+- James Wagabaza
+
+/******************************************************************************
+** 1. Describe how your firstIndexOf() method in RangeBinarySearch.java
+**    finds the first index of a key that equals the search key.
+******************************************************************************/
+
+We declare two variables low and high to mark the segment of where key is probable to lie and while low is less than
+high we calculate middle index. We then compare the key to the middle element, if key is equal to the middle element,
+it means that he have found an element which equals to the search key but we continue to search as there's a probability
+that there's another element that equals to the search key before the middle index, here we set high to mid - 1 to
+search the indices that come before the middle one. If the key is less than the middle element, we adjust high to middle
+element-1 which means that the key is probable to be before the middle element. If key is greater than the middle
+element we adjust low to middle element +1 which means key is probable to lay after the middle element. and lastly if
+the search key doesn't match with any element, we return - 1.
+
+/******************************************************************************
+** 2. State and justify the asymptotic complexity of the operations
+**    in the Autocomplete class in the dictionary size n.
+**    For all Matches and numberOfMatches, the asymptotic complexity
+**    should also depend on the matching terms m.
+**
+**    You may take the number of comparisons as a proxy for the runtime.
+******************************************************************************/
+
+sortDictionary: O(N log(N))
+
+We used Java's Arrays.sort method. It is assumed that this method performs O(N log(N)) comparisons in the length N
+of the input array.
+
+allMatches: O(log (N) + M log(M))
+We assume that String.length has constant complexity O(1)
+Our firstIndexOf method has logarithmic complexity O(log N) where N is the number of terms, it's the same case for
+lastIndexOf. It is due to the fact that, instead of going through each element once, at each step
+(in our case, comparisons), we divide the search space by 2 which mathematically proves to be logarithmic (base 2).
+Finding the number of matches when initializing array with fixed size takes O(log (N)) -- see numberOfMatches below.
+Copying all the matching terms to a new array takes linear time O(M), where M is the number of matching terms, as we go
+through each matching term only once.
+Then, as in sortDictionary, we call Java's Arrays.sort method which has linearithmic complexity O(N log(N)) but since
+we are talking about only the matching terms, it means that sorting takes O(M log(M)).
+
+When we sum everything (ignoring constants), we get O(log (N) + log (N) + O(log (N)) + M + M log(M)), which, in the end,
+gives us O(log (N) + M log(M)).
+
+
+numberOfMatches: O(log (N))
+
+We assume that String.length has constant complexity O(1)
+Our firstIndexOf method has logarithmic complexity O(log N) where N is the number of terms, it's the same case for
+lastIndexOf.
+We also assume that the operations in the if-else blocks take constant time O(1) (comparing, subtracting, returning)
+
+When we sum everything (ignoring constants), we get O(log (N) + log (N)), which, in the end, gives us O(log (N)).
+
+/******************************************************************************
+** Appendix: General information
+**
+** A. Approximately how many hours did you spend on the assignment?
+******************************************************************************/
+
+Aditya Nair: 10
+Erdem Halil: 14
+James Wagabaza: 13
+
+/******************************************************************************
+** B. Are there any known bugs / limitations?
+******************************************************************************/
+
+No.
+
+/******************************************************************************
+** C. Did you collaborate with any other students on this lab?
+**    If so, please write in what way you collaborated and with whom.
+**    Also include any resources (including the web) that you may
+**    may have used in creating your design.
+******************************************************************************/
+
+No.
+
+/******************************************************************************
+** D. Describe any serious problems you encountered.                    
+******************************************************************************/
+
+We had some problems with first and third part. Most issues were minor but it took us some time to figure out how to
+fix the bugs and iron out the corner cases.
+
+/******************************************************************************
+** E. List any other comments here.
+**    Feel free to provide any feedback on how much you learned 
+**    from doing the assignment, and whether you enjoyed it.                                             
+******************************************************************************/
+
+[...]
+

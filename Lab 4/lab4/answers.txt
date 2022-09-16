@@ -1,0 +1,194 @@
+/******************************************************************************
+** DIT181  Datastrukturer och algoritmer, LP3 2021
+** Lab 4: Path finder
+*******************************************************************************/
+
+Group members:
+- Aditya Nair
+- Erdem Halil
+- James Wagabaza
+
+/******************************************************************************
+** 1. List the minimal cost, shortest path, and number of loop iterations
+**    for each of the following invocations.
+******************************************************************************/
+
+> java RunPathFinder ucs AdjacencyGraph graphs/AdjacencyGraph/citygraph-SE.txt Lund Kiruna
+
+loop iterations: 5427
+minimal cost:    1826.0
+shortest path:   Löddeköpinge -> Hjärnarp -> Åled -> Oskarström -> ... -> Storuman -> Sorsele -> Jokkmokk -> Gällivare
+ -> Kiruna
+
+> java RunPathFinder ucs NPuzzle 3 "/HFG/BED/C_A/" "/ABC/DEF/GH_/"
+
+loop iterations: 483573
+minimal cost:    31.0
+shortest path: /HFG/BED/C_A/ -> /HFG/BED/CA_/ -> /HFG/BE_/CAD/ -> /HFG/B_E/CAD/ -> /H_G/BFE/CAD/ -> ... -> /AC_/DBE/GHF/
+ -> /A_C/DBE/GHF/ -> /ABC/D_E/GHF/ -> /ABC/DE_/GHF/ -> /ABC/DEF/GH_/
+
+> java RunPathFinder astar NPuzzle 3 "/HFG/BED/C_A/" "/ABC/DEF/GH_/"
+
+loop iterations: 32375
+minimal cost:    31.0
+
+> java RunPathFinder ucs NPuzzle 3 "/HGF/BED/C_A/" "/ABC/DEF/GH_/"
+
+loop iterations: 483841
+minimal cost:    -
+shortest path:   No Path
+
+> java RunPathFinder ucs GridGraph graphs/GridGraph/AR0011SR.map "23:161" "130:211"
+
+loop iterations: 159327
+minimal cost:    366.40411229460744
+shortest path:   23:161 -> 23:160 -> 23:159 -> 23:158 -> 23:157 -> ... -> 132:207 -> 131:208 -> 131:209 -> 130:210 ->
+130:211
+
+> java RunPathFinder astar GridGraph graphs/GridGraph/AR0011SR.map "23:161" "130:211"
+
+loop iterations: 95160
+minimal cost:    366.4041122946075
+
+> java RunPathFinder ucs WordLadder graphs/WordLadder/words-saldo.txt syster broder
+
+loop iterations: 71182
+minimal cost:    11.0
+shortest path:   sylter -> sylten -> synten -> synden -> ... -> bauden -> bruden -> bröden -> bröder -> broder
+
+> java RunPathFinder astar WordLadder graphs/WordLadder/words-saldo.txt syster broder
+
+loop iterations: 7055
+minimal cost:    11.0
+
+/******************************************************************************
+** 2. For each of the three classes GridGraph, WordLadder, and NPuzzle,
+**    what is the approximate improvement in the number of loop iterations
+**    by running A* instead of UCS?
+**    Try a number of different examples per class.
+******************************************************************************/
+
+GridGraph: 1.6 times
+
+WordLadder: 3.8 times
+
+NPuzzle: 28 times
+
+/******************************************************************************
+** 3. For which of the three classes GridGraph, WordLadder, and NPuzzle,
+**    did the heuristics .guessCost() have the most impact?
+**    Why do you think this is the case?
+******************************************************************************/
+
+The heuristic .guessCost() has the most impact on the NPuzzle class as there is greater improvement in the number
+of loop iterations as compared to the improvements of GridGraph and WordLadder.
+
+We think it's mainly because different heuristics applied to different graphs have a tendency to overestimate or to
+underestimate guesses. The A* algorithm is only optimal if the heuristic is admissible which means that overestimating
+is not acceptable. After a research in the web, we found out that Manhattan distance, also known as taxicab distance, is
+usually preferred over the more common Euclidean distance when there is high dimensionality in the data. Also, it turns
+out that it's the more admissible heuristic for solving n puzzles.
+
+/******************************************************************************
+** 4. Give pseudo-code of the following methods that you implemented.
+**    Try to abstract over details which are relevant only for Java.
+**    Make it easy to follow for a human.
+******************************************************************************/
+
+WordLadder.outgoingEdges(String w):
+    edgeList = new LinkedList
+    for i in w.length
+        for each char c in charset
+            char[] wChar = w.toCharArray()
+            if wChar[i] == c:
+                continue
+            c = wChar[i]
+            newWord = wChar to String
+            if dictionary contains newWord:
+                edgeList.add(new DirectedEdge(w, newWord))
+    return edgeList
+
+
+
+WordLadder.guessCost(String w, String u):
+    diff = 0;
+    if w.length == u.length:
+        char[] w1 = w.toCharArray()
+        char[] u1 = u.toCharArray()
+        for i in w.length:
+            if w[i] != u1[i]:
+                increment diff
+    return diff
+
+
+GridGraph.guessCost(Coord p, Coord q):
+    return square root of (p.y - q.y)^2 + (p.x - q.x)^2
+
+/******************************************************************************
+** 5. Give pseudo-code of the method .searchAstar() in PathFinder.
+******************************************************************************/
+
+PathFinder.searchAstar(Node start, Node goal):
+    pqueue = new PriorityQueue(comparing costToHere)
+    visitedNodes = new HashSet
+    pqueue.add(new PQEntry for start)
+    while pqueue is not empty:
+       entry = pqueue.remove()
+       if visitedNodes does not contain entry.node:
+           visitedNodes.add(entry.node)
+       if entry.node == goal:
+           SUCCESS:) extract the path and return it
+       for edge in graph.outgoingEdges(entry.node):
+           costToNext = entry.costToHere + edge.weight
+           estimatedCost = guessCost(from next node to goal)
+           pqueue.add(new PQEntry for edge.to)
+    FAILURE:( no solution found
+
+
+/******************************************************************************
+** 6. What are the main differences between your implementations 
+**    of .searchAstar() and .searchUCS()?
+******************************************************************************/
+
+.searchAstar()'s priority of the PQ is the estimated total cost from the start, via a particular node, to the goal
+(via guessCost), whereas .searchUCS()'s priority of the PQ is cost to the specific node. This ensures that we find the
+ shortest path (if there is one) in less iterations.
+
+/******************************************************************************
+** Appendix: General information
+**
+** A. Approximately how many hours did you spend on the assignment?
+******************************************************************************/
+
+Aditya Nair: 8
+Erdem Halil: 11
+James Wagabaza: 8
+
+/******************************************************************************
+** B. Are there any known bugs / limitations?
+******************************************************************************/
+
+No.
+
+/******************************************************************************
+** C. Did you collaborate with any other students on this lab?
+**    If so, please write in what way you collaborated and with whom.
+**    Also include any resources (including the web) that you may
+**    may have used in creating your design.
+******************************************************************************/
+
+No.
+
+/******************************************************************************
+** D. Describe any serious problems you encountered.                    
+******************************************************************************/
+
+We had hard time coming up with how to implement outgoingEdges() and searchAstar() and later on fixing bugs.
+
+/******************************************************************************
+** E. List any other comments here.
+**    Feel free to provide any feedback on how much you learned 
+**    from doing the assignment, and whether you enjoyed it.                                             
+******************************************************************************/
+
+

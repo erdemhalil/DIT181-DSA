@@ -1,0 +1,147 @@
+/******************************************************************************
+** DIT181  Datastrukturer och algoritmer, LP3 2021
+** Lab 3: Plagiarism detection
+*******************************************************************************/
+
+Group members:
+- Aditya Nair
+- Erdem Halil
+- James Wagabaza
+
+/******************************************************************************
+** Task: Running the slow program
+**
+** 1. What is the asymptotic complexity of findSimilarity?
+**    Answer in terms of N, the total number of 5-grams in the input files.
+**    Assume that the number of duplicate occurrences of 5-grams is
+**    a small constant - that is, there is not much plagiarised text.
+******************************************************************************/
+
+Let D be the number of documents, K be the number of 5-grams per document and N be the total 5-grams in the set of
+documents which can be found by multiplying D and K.
+
+Iterating through the number of documents takes linear time - O(D) where D is the number of documents. It's done twice
+Iterating through the 5-grams in a document takes linear time - O(K) where K is the number of 5-grams in the document.
+This is also done twice.
+Assuming that checking for equality, getting the value associated with a key, creating a new path pair and inserting a
+key-value pair into a map takes constant time O(1), we can say that the asymptotic complexity of findSimilarity is
+O(D * D * K * K) since these loops are all nested. Knowing that N = D * K, we can get the complexity in terms of N ->
+O(N * N), or O(N^2).
+
+All in all, the asymptotic complexity of findSimilarity is quadratic -> O(N^2)
+
+/******************************************************************************
+** 2. How long did the program take on the 'small' and 'medium' directories?
+**    Is the ratio between the times what you would expect, given the complexity?
+**    Explain very briefly why.
+*******************************************************************************/
+
+On small directory the program took 2,22 seconds, whereas on the medium directory it took 374,34 seconds.
+Considering that medium directory contains 10 times more 5-grams, the numbers we got for medium directory were a bit
+surprising since given the quadratic complexity, it should have taken about 220 seconds to report. As mentioned in the
+lab description, the reason for it to take longer than expected might be due to the fact that we assume that there is
+not much plagiarised text which means that it should be constant but, in the real world, it's rarely the case.
+It turns out that medium directory contains relatively more plagiarised text than the small one which results in the
+runtime being longer than expected.
+
+/******************************************************************************
+** 3. How long do you predict the program would take to run on
+**    the 'huge' directory? Show your calculations.
+*******************************************************************************/
+
+We'll talk about the theoretical side of things which means that the assumption is that there is not much plagiarised
+text. The huge directory contains approximately 200 times more 5-grams than the small one. Knowing that running the
+program on small directory takes 2,22 seconds and that the complexity is quadratic, we can say that on huge directory
+it will take around 88800 seconds which is 1480 minutes, or approximately 24 hours and 40 minutes
+
+2,22 * 200^2 = 88 000
+88 000 / 60 = 1 480
+1480 / 60 = 24,67
+
+/******************************************************************************
+** Task: Using binary search trees
+**
+** 4. Which of the BSTs in the program usually become unbalanced?
+**    Say very briefly how you deduced this.
+******************************************************************************/
+
+From the balance statistics we can see that the BST which we use to store all the files in the directory and the ngrams
+in that specific file usually become unbalanced, their size to height ratio is 1:1 which is a worst-case scenario for
+BSTs. Balance statistics for index and similarity show that size to height ratio is drastically better than files one.
+
+/******************************************************************************
+** 5 (optional). Is there a simple way to stop these trees becoming unbalanced?
+******************************************************************************/
+
+[...]
+
+/******************************************************************************
+** Task: Using scapegoat trees
+**
+** 6. Now what is the total asymptotic complexities of running and buildIndex
+**    and findSimilarity? Include brief justification. Again, assume a total
+**    of N 5-grams, and a constant number of duplicate occurrences of 5-grams.
+******************************************************************************/
+
+buildIndex: Going through all the files in the directory takes O(D) time where D is the number of files. Going through
+all the ngrams in each file takes O(K) time where K is the number of ngrams in that file. Those loops are nested which
+means that we get O(D * K) in total. Considering that D * K = N where N is the total number of ngrams in the directory,
+we can say that it takes linear O(N) time. Checking whether a Scapegoat Tree contains an element takes O(Log N) time,
+inserting an element to a Scapegoat Tree has logarithmic complexity, so is the case with finding an element and then
+updating its associated value (finding -> O(Log N), adding to ArrayList O(1)). In total we get linearithmic O(N Log N)
+complexity for buildIndex.
+
+findSimilarity: Going through all the ngrams takes O(N) time where N is the number of ngrams in the directory. Iterating
+through the occurrences of an ngram twice takes constant O(1) as we assume that the number of 5-grams that occur in more
+than one file is a small constant. Checking whether a Scapegoat Tree contains an element takes O(Log N) time, inserting
+or overwriting the values on an already existing element in a Scapegoat Tree has logarithmic complexity. In the end we
+get linearithmic O(N Log N) complexity for findSimilarity as well.
+
+Since these 2 are not nested in any way, we can sum them up and after disregarding the constants, the final result is
+O(N Log N).
+
+/******************************************************************************
+** 7 (optional). What if the total similarity score is an arbitrary number S,
+**               rather than a small constant?
+******************************************************************************/
+
+[...]
+
+/******************************************************************************
+** Appendix: General information
+**
+** A. Approximately how many hours did you spend on the assignment?
+******************************************************************************/
+
+Aditya Nair:  3
+Erdem Halil:  15
+James Wagabaza:  3
+
+/******************************************************************************
+** B. Are there any known bugs / limitations?
+******************************************************************************/
+
+No.
+
+/******************************************************************************
+** C. Did you collaborate with any other students on this lab?
+**    If so, please write in what way you collaborated and with whom.
+**    Also include any resources (including the web) that you may
+**    may have used in creating your design.
+******************************************************************************/
+
+No.
+
+/******************************************************************************
+** D. Describe any serious problems you encountered.                    
+******************************************************************************/
+
+Implementing Scapegoat Tree and findSimilarity was quite a challenge.
+
+/******************************************************************************
+** E. List any other comments here.
+**    Feel free to provide any feedback on how much you learned 
+**    from doing the assignment, and whether you enjoyed it.                                             
+******************************************************************************/
+
+

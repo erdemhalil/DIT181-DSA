@@ -1,0 +1,137 @@
+/******************************************************************************
+** DIT181 Datastrukturer och algoritmer, LP3 2021
+** Lab 1: Sorting, Complexity
+*******************************************************************************/
+
+Group members:
+- Aditya Nair
+- Erdem Halil
+- James Wagabaza
+
+/******************************************************************************
+** Task: Figuring out the complexity
+**
+** 1. What is the complexity of running each of the following algorithms
+**    on each of the following kinds of inputs?
+**    You only have to decide between quadratic or faster than quadratic.
+******************************************************************************/
+
+Insertion.java on:
+
+- random inputs:      Quadratic
+- 95% sorted inputs:  Quadratic
+- sorted inputs:      Faster than quadratic
+
+Quick.java on:
+
+- random inputs:      Faster than quadratic
+- 95% sorted inputs:  Faster than quadratic
+- sorted inputs:      Quadratic
+
+Merge.java on:
+
+- random inputs:      Faster than quadratic
+- 95% sorted inputs:  Faster than quadratic
+- sorted inputs:      Faster than quadratic
+
+/******************************************************************************
+** 2. How did you check if an algorithm had quadratic complexity or not?
+******************************************************************************/
+
+We checked the complexity of the algorithms by comparing the time it takes to sort 10 000 and 100 000 elements.
+Since 100 000 elements are 10 times more than 10 000, it makes sense that, if the complexity is quadratic,
+it will take around 100 times more time.
+
+We did not consider the times for sizes less than 10 000 because we realised that they were not consistent for inputs
+of smaller sizes. Perhaps, it has to do with the cache memory of the CPU we used for running the code which may perform
+better when handling smaller inputs.
+
+/******************************************************************************
+** Task: Improving quicksort
+**
+** 3. Do the following changes affect the complexity of quicksort
+**    on any kind of input data? If so, what is it that changes?
+******************************************************************************/
+
+Shuffling the array first:
+Yes, because we saw drastic decrease in time differences between sorting 10 000 and 100 000 elements. It went from 100
+more to around 10 times more. Worst case scenario for quicksort is that the array is already sorted. This is because
+quicksort picks the first element as pivot which happens to be the smallest element in the entire array. But when we
+shuffle the array, we ensure that the elements in the array are randomly places which results in the first element
+being a random element from the initial array.
+
+Median-of-three pivot selection:
+Yes, we can see decrease in complexity for sorted arrays. Again, for an already sorted array quicksort selects the
+smallest (first) element as pivot which results in worst case complexity O(n^2). When we use median-of-three pivot
+selection in a sorted array, it will always select the middle element which often is the ideal pivot.
+
+Insertion sort for small arrays:
+No, switching to insertion sort by itself doesn't affect the complexity of quicksort.
+
+/******************************************************************************
+** 4. What is a good cutoff to use for insertion sort?
+**    Explain briefly how you came to this answer.
+**    Remember that you should try to find the answer in a systematic way.
+******************************************************************************/
+
+The optimal cutoff value to switch to insertion sort we found was 90 . In order to come up with this answer, we ran
+both Quick.java and Insertion.java and analyzed the results. It seemed that insertion sort was performing quite better
+for sizes smaller than 100, above that it only got worse by a big margin.
+
+From here, we knew that we had to test with values less than/around 100. So, we changed the sample sizes to vary from 10
+to 150. The results showed that insertion sort was totally outperforming quicksort in 95% and completely sorted arrays.
+But when it came to random input, quicksort prevailed over insertion for sizes larger than 100. In order to get the most
+of the insertion sort we decided to go for 90 as the cutoff value.
+
+
+/******************************************************************************
+** 5. Which combination of improvements gives the best performance?
+******************************************************************************/
+
+Using the median-of-three for the pivot selection and switching to insertion sort for small subarrays gives the best
+performance. Shuffling is not ideal because if the array is random, shuffling call only increases complexity.
+If initial input is 95% or completely sorted, shuffling only makes matters worse by making median-of-three pivot
+selection pointless.
+
+/******************************************************************************
+** Appendix: General information
+**
+** A. Approximately how many hours did you spend on the assignment?
+******************************************************************************/
+
+Aditya Nair: 9
+Erdem Halil: 14
+James Wagabaza: 10
+
+
+/******************************************************************************
+** B. Are there any known bugs / limitations?
+******************************************************************************/
+
+No
+
+/******************************************************************************
+** C. Did you collaborate with any other students on this lab?
+**    If so, please write in what way you collaborated and with whom.
+**    Also include any resources (including the web) that you may
+**    may have used in creating your design.
+******************************************************************************/
+
+No, we did not collaborate with any other students.
+We had some help from StackExchange.
+
+/******************************************************************************
+** D. Describe any serious problems you encountered.                    
+******************************************************************************/
+
+We found it difficult to come up with an initial insertion sort cutoff value. A lot of time was spent trying to
+figure it out but with the help of a TA, we were able to tackle this problem.
+
+/******************************************************************************
+** E. List any other comments here.
+**    Feel free to provide any feedback on how much you learned 
+**    from doing the assignment, and whether you enjoyed it.                                             
+******************************************************************************/
+
+We learned that the complexity of an algorithm is extremely important for big data sizes and that a mix of sorting
+algorithms can do wonders!
